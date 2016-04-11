@@ -9,7 +9,7 @@ def range(ode_method, ode, initial_val, start, end, step_size=0.01):
     values = []
     old_val = initial_val
 
-    for t in frange(start, end + step_size, step_size):
+    for t in frange(start, end + 0.00001, step_size):
         values.append((t, old_val))
         new_val = ode_method(ode, old_val, t, step_size)
         old_val = new_val

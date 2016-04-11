@@ -3,7 +3,7 @@ import sympy
 import ode_methods.ode_range_methods as ode_methods
 
 
-def parser_input():
+def parse_input():
 
     parser = argparse.ArgumentParser(
         description='Apply ODE and Iterative methods')
@@ -53,7 +53,7 @@ def parser_input():
 def run_ode(args):
     methods = {
         'euler': ode_methods.euler_range,
-        'euler_mod': ode_methods.euler_modified_range,
+        'euler-mod': ode_methods.euler_modified_range,
         'midpoint': ode_methods.midpoint_range,
         'rk4': ode_methods.runge_kutta_4_range
     }
@@ -73,7 +73,7 @@ def run_ode(args):
 
 
 def main():
-    args = parser_input()
+    args = parse_input()
 
     if (args.command == 'ode'):
         run_ode(args)

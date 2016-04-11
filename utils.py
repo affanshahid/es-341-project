@@ -1,4 +1,4 @@
 def frange(x, y, jump):
-    while x < y:
+    while round(x, 5) < y:
         yield x
         x += jump
