@@ -1,6 +1,7 @@
 import argparse
 import sympy
-import ode_methods.ode_range_methods as ode_methods
+import ode_methods
+import iterative_methods
 
 
 def parse_input():
@@ -46,6 +47,37 @@ def parse_input():
                             required=True,
                             choices=['midpoint', 'euler', 'euler-mod', 'rk4'],
                             help='which ODE method to use')
+    ode_parser.add_argument('-t',
+                            '--tol',
+                            type=float,
+                            required=True,
+                            help='tolerance')
+
+    iter_parser = subparsers.add_parser('iterative',
+                                        help='Approximate root of a function')
+
+    iter_parser.add_argument('-t',
+                             '--tol',
+                             type=float,
+                             required=True,
+                             help='tolerance')
+    iter_parser.add_argument('-i',
+                             '--initial',
+                             type=float,
+                             required=True,
+                             help='initial guess')
+    iter_parser.add_argument('-k',
+                             '--initial2',
+                             type=float,
+                             required=True,
+                             help='second gues required for secant method')
+
+    iter_parser.add_argument('-m',
+                             '--method',
+                             type=str,
+                             required=True,
+                             choices=['newton', 'secant', 'newton-mod'],
+                             help='which iterative method to use')
 
     return parser.parse_args()
 
@@ -70,6 +102,39 @@ def run_ode(args):
 
     for t, y in vals:
         print('f({:.4f}) = {}'.format(t, y))
+
+
+def run_iterative(args):
+    x = sympy.Symbol('x')
+
+    expr = sympy.sympify(args.func)
+    expr_prime = expr.diff(x)
+
+    def wrapper(x_val):
+        return expr.subs({x: x_val})
+
+    def wrapper_prime(x_val):
+        return expr_prime.subs({x: x_val})
+
+    vals = []
+
+    if args.method == 'newton':
+        vals.extend(iterative_methods.newton(wrapper, wrapper_prime,
+                                             args.initial, args.tol))
+    elif args.method == 'newton-mod':
+        expr_2prime = expr_prime.diff(x)
+
+        def wrapper_2prime(x_val):
+            return expr_2prime.subs({x: x_val})
+
+        vals.extend(iterative_methods.newton_modified(
+            wrapper, wrapper_prime, wrapper_2prime, args.initial, args.tol))
+    elif args.method == 'secant':
+        vals.extend(iterative_methods.secant(
+            wrapper, wrapper_prime, args.initial, args.initial2, args.tol))
+
+    for i, x in enumerate(vals):
+        print('x_{} = {}'.format(i, x))
 
 
 def main():
