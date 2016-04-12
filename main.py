@@ -75,9 +75,9 @@ def run_ode(args):
 def main():
     args = parse_input()
 
-    if (args.command == 'ode'):
+    if args.command == 'ode':
         run_ode(args)
-    elif (args.command == 'iterative'):
+    elif args.command == 'iterative':
         pass
 
 
