@@ -2,6 +2,7 @@ import argparse
 import sympy
 import ode_methods
 import iterative_methods
+import math
 
 
 def parse_input():
@@ -106,7 +107,6 @@ def run_ode(args):
 
 def run_iterative(args):
     x = sympy.Symbol('x')
-
     expr = sympy.sympify(args.func)
     expr_prime = expr.diff(x)
 
@@ -143,7 +143,7 @@ def main():
     if args.command == 'ode':
         run_ode(args)
     elif args.command == 'iterative':
-        pass
+        run_iterative(args)
 
 
 if __name__ == '__main__':
